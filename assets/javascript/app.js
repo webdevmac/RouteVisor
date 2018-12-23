@@ -20,7 +20,7 @@ $(document).ready(function () {
         messagingSenderId: "676595493403"
     };
     firebase.initializeApp(config);
-    var database = firebase.database();   
+    var database = firebase.database();
 
     // Define initMap function
     function initMap() {
@@ -28,10 +28,10 @@ $(document).ready(function () {
         var center = new google.maps.LatLng(41.093598, -81.4393721);
         map = new google.maps.Map(document.getElementById('map'), {
             mapTypeControl: false,
-            center: { lat: 41.093598, lng: -81.4393721 },       
-            zoom: 4,            
+            center: { lat: 41.093598, lng: -81.4393721 },
+            zoom: 4,
         });
-       
+
         // Initialize Places Service part of the API
         service = new google.maps.places.PlacesService(map);
 
@@ -47,7 +47,7 @@ $(document).ready(function () {
                 title: 'Stop Point!',
                 icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
             };
-            
+
             service.nearbySearch(request, callback);
         });
 
@@ -76,9 +76,9 @@ $(document).ready(function () {
         // when the user clicks a marker, show infoWindow with name, photo, vicinity, and rating
         marker.addListener('click', function () {
             infowindow.open(map, marker);
-            infowindow.setContent("<h4 class='marker text-center'>" + place.name + "</h4><img src='" + place.photos[0].getUrl() + "'height='200px' class='img-center' alt='placephoto'><h5 class='marker text-center'>" + place.vicinity +"</h5></n><p class='marker text-center'>Rating: " + place.rating + "/5</p>");
+            infowindow.setContent("<h4 class='marker text-center'>" + place.name + "</h4><img src='" + place.photos[0].getUrl() + "'height='200px' class='img-center' alt='placephoto'><h5 class='marker text-center'>" + place.vicinity + "</h5></n><p class='marker text-center'>Rating: " + place.rating + "/5</p>");
         });
-        
+
         return marker;
     };
 
@@ -91,7 +91,7 @@ $(document).ready(function () {
 
     // run initMap when window loads
     google.maps.event.addDomListener(window, 'load', initMap);
-    
+
     // define AutocompleteDirectionsHandler function
     function AutocompleteDirectionsHandler(map) {
         this.map = map;
@@ -106,10 +106,10 @@ $(document).ready(function () {
 
         var originAutocomplete = new google.maps.places.Autocomplete(
             originInput, { placeIdOnly: true });
-            
+
         var destinationAutocomplete = new google.maps.places.Autocomplete(
             destinationInput, { placeIdOnly: true });
-            console.log(destinationAutocomplete);
+        console.log(destinationAutocomplete);
 
         this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
         this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
@@ -131,15 +131,15 @@ $(document).ready(function () {
             }
             me.route();
         });
-    
+
     };
-    
+
     AutocompleteDirectionsHandler.prototype.route = function () {
         if (!this.originPlaceId || !this.destinationPlaceId) {
             return;
         }
         var me = this;
-    
+
         this.directionsService.route({
             origin: { 'placeId': this.originPlaceId },
             destination: { 'placeId': this.destinationPlaceId },
@@ -152,32 +152,32 @@ $(document).ready(function () {
             }
             responseObject = response;
 
-             // weather api queried and set to display weather based on user's desired end location
-            function weathersrch(){
+            // weather api queried and set to display weather based on user's desired end location
+            function weathersrch() {
                 var weatherinput = response.routes[0].legs[0].end_address
-                
-            $.ajax({
-                url: "https://api.openweathermap.org/data/2.5/weather?q=" + weatherinput +"&APPID=1488d45564a266db9560e76d8c1a9c18",
-                method: "GET"
-              }).then(function(response) {
-                  var kelvin = response.main.temp
-                  var celsius = kelvin - 273;
-                  var tempf = Math.floor(celsius * (9/5) + 32);
-        
-                console.log(response);
-                $("#weather").html("<div><h4 class='text-center mt-5'>Weather in "+ response.name +" right now: </h4><h5 class='text-center'>" + response.weather[0].description + "</h5><h4 class='text-center'>" + tempf + " degrees</h4>" + "</h4></div>")
-                  console.log(response)
-                });
-              }
 
-              weathersrch();
-            
+                $.ajax({
+                    url: "https://api.openweathermap.org/data/2.5/weather?q=" + weatherinput + "&APPID=1488d45564a266db9560e76d8c1a9c18",
+                    method: "GET"
+                }).then(function (response) {
+                    var kelvin = response.main.temp
+                    var celsius = kelvin - 273;
+                    var tempf = Math.floor(celsius * (9 / 5) + 32);
+
+                    console.log(response);
+                    $("#weather").html("<div><h4 class='text-center mt-5'>Weather in " + response.name + " right now: </h4><h5 class='text-center'>" + response.weather[0].description + "</h5><h4 class='text-center'>" + tempf + " degrees</h4>" + "</h4></div>")
+                    console.log(response)
+                });
+            }
+
+            weathersrch();
+
             console.log(response.request.destination.placeId);
 
             console.log(responseObject);
-            
+
             instructions = response.routes[0].legs[0].steps.map((step) => step.instructions);
-    
+
             console.log(instructions);
 
             //writes directions to html
@@ -186,19 +186,19 @@ $(document).ready(function () {
                 <h5 class="mb-5 mr-2"> Distance: ${response.routes[0].legs[0].distance.text}</h5>
                 <h5 class="mb-5 ml-2"> Duration: ${response.routes[0].legs[0].duration.text}</h5>
                 <h6 class="displayDirections mt-5"> Directions </h6>`)
-    
-            for(var i=0; i<instructions.length; i++) {
+
+            for (var i = 0; i < instructions.length; i++) {
                 $("#directionsPanel").append(
                     `<ol class="ordered-list">
                         <li>${instructions[i]}</li>
                     </ol>`)
             };
-    });
-};
+        });
+    };
 
 
-    // on click that will display the waypoints on the route
-    $("#submit-button").on("click", function () {
+    // on click that will display the waypoints on the route based on number of miles 
+    $("#submit-button-miles").on("click", function () {
 
         var stepDistance;
         var totalStepDistance;
@@ -238,10 +238,10 @@ $(document).ready(function () {
                     // Create a marker and set its position.
                     myLatLng = position;
 
-                     marker = new google.maps.Marker({
+                    marker = new google.maps.Marker({
                         map: map,
                         position: myLatLng,
-                        title: 'Stop Point!'                        
+                        title: 'Stop Point!'
 
                     });
 
@@ -285,7 +285,96 @@ $(document).ready(function () {
 
 
         });
-     
-});
 
+    });
+
+    // on click that will display the waypoints on the route based on number of minutes 
+    $("#submit-button-minutes").on("click", function () {
+
+        var stepDuration;
+        var waypointsArray = [];
+        tripDurationInput = $("#max-travel-dur").val().trim();// user input number of minutes to travel before stopping
+        tripDurationInput = parseInt(tripDurationInput);
+        console.log(tripDurationInput);
+        tripIncriment = tripDurationInput;
+        console.log(responseObject);
+
+        var j = 0; // var j is the index of the object step
+        stepsArrayLength = responseObject.routes[0].legs[0].steps.length; //length of steps in the route
+        stepDuration = responseObject.routes[0].legs[0].steps[j].duration["value"];//the duration value for each step in seconds.
+        totalTripDuration = responseObject.routes[0].legs[0].duration["value"];// the total duration value in seconds from start to destination
+        totalTripDurationMinutes = totalTripDuration / 60; // total duration value converted to minutes
+        stepDurationMinutes = stepDuration / 60; //step duration value converted in minutes
+        totalStepDuration = 0;
+
+        console.log(totalTripDuration);
+        console.log(stepDurationMinutes);
+        console.log(stepsArrayLength);
+        console.log(totalTripDurationMinutes);
+
+        //loops through each step index of the route and adds each leg
+        for (i = 0; i < stepsArrayLength; i++) {
+
+            stepDuration = responseObject.routes[0].legs[0].steps[i].duration["value"];//duration in seconds for each step of the trip
+            stepDurationMinutes = stepDuration / 60; // duration in minutes for each step of the trip
+            totalStepDuration = totalStepDuration + stepDurationMinutes; //adds each step duration for each index
+
+            //checks to verify if total trip duration is greater than user duration input
+            if (totalTripDurationMinutes >= tripDurationInput) {
+
+                if (totalStepDuration >= tripDurationInput) {
+                    position = responseObject.routes[0].legs[0].steps[i].end_location;
+
+                    // Create a marker and set its position.
+                    myLatLng = position;
+
+                    marker = new google.maps.Marker({
+                        map: map,
+                        position: myLatLng,
+                        title: 'Stop Point!'
+
+                    });
+
+                    tripDurationInput = tripDurationInput + tripIncriment; //add trip max daily duration in minutes 
+                    waypointsArray.push(myLatLng);
+                    console.log(waypointsArray);
+
+
+                }
+
+                console.log(tripDurationInput);
+
+            }
+
+            else {
+
+            }
+
+        }
+
+        waypointsArray.forEach(function (latLng) {
+            service.nearbySearch({
+                location: latLng,
+                radius: 8000,
+                types: ['lodging']
+            }, function (results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    for (var i = 0; i < results.length; i++) {
+                        markers.push(createMarker(results[i]));
+                    }
+                }
+            });
+        });
+        google.maps.event.addDomListener(window, 'load', initMap);
+
+        database.ref().push({
+
+
+            distance: responseObject.routes[0].legs[0].distance["text"],
+            duration: responseObject.routes[0].legs[0].duration["text"]
+
+
+        });
+
+    });
 })

@@ -53,9 +53,12 @@ form {
     z-index: 1; /* The z-index should be higher than Google Maps */
 }
 
-#submit-button {
+#submit-button-miles,
+#submit-button-minutes {
     background-color: var(--dark--turquoise);
     border-color: var(--dark--turquoise);
+    margin-bottom: 15px;
+
 }
 
 
